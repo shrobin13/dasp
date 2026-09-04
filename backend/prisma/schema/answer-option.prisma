@@ -1,0 +1,10 @@
+model AnswerOption {
+  answerId String @db.Uuid
+  optionId String @db.Uuid
+
+  answer Answer         @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  option QuestionOption @relation(fields: [optionId], references: [id], onDelete: Restrict)
+
+  @@id([answerId, optionId])
+  @@index([optionId])
+}

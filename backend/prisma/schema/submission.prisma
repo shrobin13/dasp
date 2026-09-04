@@ -1,0 +1,17 @@
+model Submission {
+  id        String @id @default(uuid()) @db.Uuid
+  attemptId String @unique @db.Uuid
+
+  status      SubmissionStatus @default(FINAL)
+  submittedAt DateTime         @default(now())
+
+  // Immutable metadata captured at final submission time.
+  snapshotVersion Int   @default(1)
+  metadata        Json?
+
+  attempt    AssessmentAttempt  @relation(fields: [attemptId], references: [id], onDelete: Restrict)
+  answers    SubmissionAnswer[]
+  evaluation Evaluation?
+
+  @@index([submittedAt])
+}

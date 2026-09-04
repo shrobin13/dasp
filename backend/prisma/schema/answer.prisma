@@ -1,0 +1,18 @@
+model Answer {
+  id         String @id @default(uuid()) @db.Uuid
+  attemptId  String @db.Uuid
+  questionId String @db.Uuid
+
+  textValue    String?  @db.Text
+  numericValue Decimal? @db.Decimal(18, 6)
+  savedAt      DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  attempt         AssessmentAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question        Question          @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  selectedOptions AnswerOption[]
+
+  @@unique([attemptId, questionId])
+  @@index([attemptId, updatedAt])
+  @@index([questionId])
+}

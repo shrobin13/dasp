@@ -1,0 +1,19 @@
+model AssessmentQuestion {
+  id           String @id @default(uuid()) @db.Uuid
+  assessmentId String @db.Uuid
+  questionId   String @db.Uuid
+
+  sortOrder Int
+  marks     Decimal @db.Decimal(8, 2)
+  required  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  question   Question   @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@unique([assessmentId, questionId])
+  @@unique([assessmentId, sortOrder])
+  @@index([questionId])
+  @@index([assessmentId, sortOrder])
+}

@@ -1,0 +1,26 @@
+model Question {
+  id        String  @id @default(uuid()) @db.Uuid
+  companyId String? @db.Uuid
+
+  type         QuestionType
+  difficulty   QuestionDifficulty @default(MEDIUM)
+  text         String             @db.Text
+  explanation  String?            @db.Text
+  defaultMarks Decimal            @default(1) @db.Decimal(8, 2)
+  tags         String[]           @default([])
+  isActive     Boolean            @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company           Company?             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  options           QuestionOption[]
+  assessments       AssessmentQuestion[]
+  answers           Answer[]
+  submissionAnswers SubmissionAnswer[]
+  evaluationItems   EvaluationItem[]
+
+  @@index([companyId, isActive])
+  @@index([companyId, difficulty])
+  @@index([companyId, type])
+}

@@ -1,0 +1,36 @@
+model Assessment {
+  id          String  @id @default(uuid()) @db.Uuid
+  companyId   String  @db.Uuid
+  jobId       String? @db.Uuid
+  createdById String  @db.Uuid
+
+  title              String   @db.VarChar(200)
+  description        String?  @db.Text
+  durationMinutes    Int?
+  passingScore       Decimal? @db.Decimal(8, 2)
+  maxAttempts        Int      @default(1)
+  randomizeQuestions Boolean  @default(false)
+  randomizeOptions   Boolean  @default(false)
+  resultVisible      Boolean  @default(false)
+
+  startAt DateTime?
+  endAt   DateTime?
+  status  AssessmentStatus @default(DRAFT)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  job       Job?    @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  createdBy User    @relation("AssessmentCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+
+  questions    AssessmentQuestion[]
+  invitations  Invitation[]
+  applications Application[]
+  attempts     AssessmentAttempt[]
+
+  @@index([companyId, status])
+  @@index([companyId, jobId])
+  @@index([companyId, createdAt])
+  @@index([status, startAt, endAt])
+}

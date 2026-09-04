@@ -1,0 +1,16 @@
+model CandidateProfile {
+  id          String @id @default(uuid()) @db.Uuid
+  candidateId String @unique @db.Uuid
+
+  phone     String? @db.VarChar(50)
+  location  String? @db.VarChar(200)
+  headline  String? @db.VarChar(200)
+  bio       String? @db.Text
+  resumeUrl String? @db.Text
+  metadata  Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  candidate Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+}

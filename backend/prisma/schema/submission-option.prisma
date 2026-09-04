@@ -1,0 +1,13 @@
+model SubmissionOption {
+  submissionAnswerId String @db.Uuid
+  optionId           String @db.Uuid
+
+  // Immutable option text snapshot.
+  optionText String @db.Text
+
+  submissionAnswer SubmissionAnswer @relation(fields: [submissionAnswerId], references: [id], onDelete: Cascade)
+  option           QuestionOption   @relation(fields: [optionId], references: [id], onDelete: Restrict)
+
+  @@id([submissionAnswerId, optionId])
+  @@index([optionId])
+}

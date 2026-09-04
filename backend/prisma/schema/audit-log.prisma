@@ -1,0 +1,28 @@
+model AuditLog {
+  id        String  @id @default(uuid()) @db.Uuid
+  companyId String? @db.Uuid
+
+  actorType        AuditActorType
+  actorUserId      String?        @db.Uuid
+  actorCandidateId String?        @db.Uuid
+
+  action       AuditAction
+  resourceType String      @db.VarChar(100)
+  resourceId   String?     @db.VarChar(100)
+
+  metadata  Json?
+  ipAddress String? @db.VarChar(45)
+  userAgent String? @db.Text
+
+  createdAt DateTime @default(now())
+
+  company        Company?   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  actorUser      User?      @relation("AuditActorUser", fields: [actorUserId], references: [id], onDelete: SetNull)
+  actorCandidate Candidate? @relation("AuditActorCandidate", fields: [actorCandidateId], references: [id], onDelete: SetNull)
+
+  @@index([companyId, createdAt])
+  @@index([companyId, resourceType, resourceId])
+  @@index([actorUserId, createdAt])
+  @@index([actorCandidateId, createdAt])
+  @@index([action, createdAt])
+}

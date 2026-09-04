@@ -1,0 +1,17 @@
+model User {
+  id        String     @id @default(uuid()) @db.Uuid
+  email     String     @unique @db.VarChar(320)
+  name      String?    @db.VarChar(200)
+  avatarUrl String?    @db.Text
+  status    UserStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships        CompanyMember[]
+  createdJobs        Job[]           @relation("JobCreatedBy")
+  createdAssessments Assessment[]    @relation("AssessmentCreatedBy")
+  auditLogs          AuditLog[]      @relation("AuditActorUser")
+
+  @@index([status])
+}

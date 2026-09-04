@@ -1,0 +1,17 @@
+model CompanyMember {
+  id        String              @id @default(uuid()) @db.Uuid
+  companyId String              @db.Uuid
+  userId    String              @db.Uuid
+  role      CompanyRole
+  status    CompanyMemberStatus @default(INVITED)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, userId])
+  @@index([userId])
+  @@index([companyId, role, status])
+}

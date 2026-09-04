@@ -1,0 +1,24 @@
+model SubmissionAnswer {
+  id           String @id @default(uuid()) @db.Uuid
+  submissionId String @db.Uuid
+  questionId   String @db.Uuid
+
+  // Immutable question snapshot.
+  questionText String       @db.Text
+  questionType QuestionType
+  maxMarks     Decimal      @db.Decimal(8, 2)
+
+  textValue    String?  @db.Text
+  numericValue Decimal? @db.Decimal(18, 6)
+
+  createdAt DateTime @default(now())
+
+  submission      Submission         @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  question        Question           @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  selectedOptions SubmissionOption[]
+  evaluationItems EvaluationItem[]
+
+  @@unique([submissionId, questionId])
+  @@index([submissionId])
+  @@index([questionId])
+}

@@ -1,0 +1,19 @@
+model Company {
+  id     String        @id @default(uuid()) @db.Uuid
+  name   String        @db.VarChar(200)
+  slug   String        @unique @db.VarChar(100)
+  status CompanyStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members      CompanyMember[]
+  jobs         Job[]
+  assessments  Assessment[]
+  invitations  Invitation[]
+  applications Application[]
+  questions    Question[]
+  auditLogs    AuditLog[]
+
+  @@index([status])
+}

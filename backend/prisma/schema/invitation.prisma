@@ -1,0 +1,37 @@
+model Invitation {
+  id            String  @id @default(uuid()) @db.Uuid
+  companyId     String  @db.Uuid
+  candidateId   String? @db.Uuid
+  applicationId String? @db.Uuid
+  assessmentId  String  @db.Uuid
+
+  invitedEmail String  @db.VarChar(320)
+  invitedName  String? @db.VarChar(200)
+
+  // Store only a hash of the raw invitation token.
+  tokenHash String @unique @db.VarChar(128)
+
+  status    InvitationStatus @default(PENDING)
+  expiresAt DateTime
+
+  sentAt      DateTime?
+  openedAt    DateTime?
+  verifiedAt  DateTime?
+  acceptedAt  DateTime?
+  cancelledAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company     Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  candidate   Candidate?   @relation(fields: [candidateId], references: [id], onDelete: SetNull)
+  application Application? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  assessment  Assessment   @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, status])
+  @@index([companyId, invitedEmail])
+  @@index([candidateId])
+  @@index([applicationId])
+  @@index([assessmentId])
+  @@index([expiresAt])
+}

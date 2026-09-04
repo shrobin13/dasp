@@ -1,0 +1,22 @@
+model EvaluationItem {
+  id                 String @id @default(uuid()) @db.Uuid
+  evaluationId       String @db.Uuid
+  submissionAnswerId String @db.Uuid
+  questionId         String @db.Uuid
+
+  gradingType  GradingType
+  awardedMarks Decimal?    @db.Decimal(8, 2)
+  maxMarks     Decimal     @db.Decimal(8, 2)
+  feedback     String?     @db.Text
+
+  evaluatedAt DateTime?
+
+  evaluation       Evaluation       @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  submissionAnswer SubmissionAnswer @relation(fields: [submissionAnswerId], references: [id], onDelete: Restrict)
+  question         Question         @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@unique([evaluationId, submissionAnswerId])
+  @@index([evaluationId])
+  @@index([questionId])
+  @@index([gradingType])
+}
