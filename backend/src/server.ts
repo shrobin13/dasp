@@ -1,7 +1,8 @@
 import app from "./app.ts";
-import { prisma } from "./lib/prisma.ts";
+import { env } from "./config/env.ts";
+import { logger } from "./shared/logger.ts";
 
-const PORT = 3000;
+const PORT = env.PORT;
 
 const main = async () => {
   try {
@@ -9,11 +10,10 @@ const main = async () => {
     console.log(`DB connected successfully!`)
 
     app.listen(PORT, () => {
-      console.log(`I am listening on port: ${PORT}`);
+      logger.info({ port: PORT }, `API server is listening on port:PORT`);
     });
   } catch (error) {
-    console.error("Error starting the server!", error);
-
+    logger.error(`Error starting the server!, ${error}`);
     await prisma.$disconnect();
     process.exit(1);
   }

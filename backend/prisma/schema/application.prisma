@@ -7,8 +7,6 @@ model Application {
 
   status ApplicationStatus @default(APPLIED)
 
-  // Snapshot of the candidate information submitted for this application.
-  // This prevents later global profile changes from rewriting recruitment history.
   profileSnapshot Json?
 
   createdAt DateTime @default(now())
